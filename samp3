@@ -1,0 +1,30 @@
+import boto3
+
+def download_file_from_s3(bucket_name, s3_key, local_path, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Downloads a file from an S3 bucket using boto3.
+    
+    :param bucket_name: Name of the S3 bucket
+    :param s3_key: The key/path of the file in the S3 bucket
+    :param local_path: Path to save the file locally
+    :param aws_access_key_id: (Optional) AWS access key ID
+    :param aws_secret_access_key: (Optional) AWS secret access key
+    :param region_name: (Optional) AWS region name
+    """
+    if aws_access_key_id and aws_secret_access_key:
+        s3_client = boto3.client('s3',
+                                 aws_access_key_id=aws_access_key_id,
+                                 aws_secret_access_key=aws_secret_access_key,
+                                 region_name=region_name)
+    else:
+        s3_client = boto3.client('s3', region_name=region_name)
+    
+    s3_client.download_file(bucket_name, s3_key, local_path)
+    print(f"Downloaded {s3_key} from bucket {bucket_name} to {local_path}")
+
+# Example usage:
+download_file_from_s3(
+    bucket_name='your-bucket-name',
+    s3_key='your/file/path/in/s3.txt',
+    local_path='/local/path/to/save/file.txt'
+)
